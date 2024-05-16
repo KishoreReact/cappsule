@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "../../pages/Search/Search.css";
 import "./Card.css";
 
-
 function Card(props) {
   const { salt_forms_json, salt } = props.data;
   const [selectedForm, setSelectedForm] = useState(
@@ -41,26 +40,28 @@ function Card(props) {
   const handlePackingButtonClick = (packing) => {
     setSelectedPacking(packing);
     const packingObj = salt_forms_json[selectedForm][selectedStrength][packing];
-  
+
     if (isAllNull(packingObj)) {
       setSellingPrice("No store selling this product near you");
       return;
     }
-  
+
     let minPrice = null;
     for (const pharmacyData of Object.values(packingObj)) {
       if (pharmacyData) {
         for (const priceObj of pharmacyData) {
-          if (priceObj && (minPrice === null || priceObj.selling_price < minPrice)) {
+          if (
+            priceObj &&
+            (minPrice === null || priceObj.selling_price < minPrice)
+          ) {
             minPrice = priceObj.selling_price;
           }
         }
       }
     }
-  
+
     setSellingPrice(minPrice);
   };
-  
 
   const isAllNull = (data) => {
     for (let key in data) {
@@ -92,7 +93,6 @@ function Card(props) {
   useEffect(() => {
     handlePackingButtonClick(selectedPacking);
   }, [selectedForm, selectedStrength, selectedPacking]);
-  
 
   const formsToShow = showAllForms
     ? Object.keys(salt_forms_json)
@@ -203,7 +203,6 @@ function Card(props) {
                     onClick={() => handlePackingButtonClick(packing)}
                   >
                     {" "}
-                    
                     {packing}
                   </button>
                 ))}
@@ -232,13 +231,22 @@ function Card(props) {
         <div className="salt-name">
           {salt}
           <div className="selected-info">
-            <p> {selectedForm} | {" "}</p>
-            <p> {selectedStrength} {" "}|{" "} </p>
-            <p> {" "}{selectedPacking}</p>
+            <p> {selectedForm} | </p>
+            <p> {selectedStrength} | </p>
+            <p> {selectedPacking}</p>
           </div>
         </div>
-        <div className={sellingPrice == "No store selling this product near you" ? 'selling-price' : 'bold-text' }>
-        {sellingPrice === "No store selling this product near you" ? sellingPrice : `From₹${sellingPrice}`}</div>
+        <div
+          className={
+            sellingPrice == "No store selling this product near you"
+              ? "selling-price"
+              : "bold-text"
+          }
+        >
+          {sellingPrice === "No store selling this product near you"
+            ? sellingPrice
+            : `From₹${sellingPrice}`}
+        </div>
       </div>
     </div>
   );
